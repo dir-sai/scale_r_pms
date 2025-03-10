@@ -14,7 +14,6 @@
 
 # production
 /build
-/dist
 
 # misc
 .DS_Store
@@ -41,10 +40,11 @@ yarn-error.log*
 next-env.d.ts
 
 # IDE
-.idea
-.vscode
-*.swp
-*.swo
+.idea/
+.vscode/
+
+# Docker
+docker-compose.override.yml
 
 # Logs
 logs
