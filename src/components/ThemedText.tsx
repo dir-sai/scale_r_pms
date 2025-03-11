@@ -1,35 +1,56 @@
-import { Text, type TextProps, StyleSheet } from 'react-native';
+import { Text, TextProps, TextStyle, StyleSheet } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useTheme } from '@/hooks/useTheme';
 
-export type ThemedTextProps = TextProps & {
-  lightColor?: string;
-  darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
-};
+type TextType = 'title' | 'subtitle' | 'subtitle2' | 'default' | 'defaultSemiBold' | 'link';
 
-export function ThemedText({
-  style,
-  lightColor,
-  darkColor,
-  type = 'default',
-  ...rest
-}: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+interface ThemedTextProps extends TextProps {
+  type?: TextType;
+  children: React.ReactNode;
+}
+
+type StyleMap = Record<TextType, TextStyle>;
+
+export function ThemedText({ type = 'default', style, children, ...props }: ThemedTextProps) {
+  const theme = useTheme();
+
+  const styles: StyleMap = StyleSheet.create({
+    title: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: theme.colors.text.primary,
+    },
+    subtitle: {
+      fontSize: 20,
+      fontWeight: '600',
+      color: theme.colors.text.primary,
+    },
+    subtitle2: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: theme.colors.text.primary,
+    },
+    default: {
+      fontSize: 16,
+      color: theme.colors.text.primary,
+    },
+    defaultSemiBold: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: theme.colors.text.primary,
+    },
+    link: {
+      fontSize: 16,
+      color: theme.colors.primary,
+      textDecorationLine: 'underline',
+    },
+  });
 
   return (
-    <Text
-      style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
-        style,
-      ]}
-      {...rest}
-    />
+    <Text style={[styles[type], style]} {...props}>
+      {children}
+    </Text>
   );
 }
 

@@ -1,35 +1,53 @@
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
-import { Text, Card } from 'react-native-paper';
+import { View, ScrollView, StyleSheet } from 'react-native'
+import { Text, Card } from '@react-native-material/core'
+
+const values = [
+  {
+    title: 'Trust & Transparency',
+    description: 'Building lasting relationships through honest communication and clear processes.'
+  },
+  {
+    title: 'Innovation',
+    description: 'Leveraging technology to simplify property management and enhance tenant experience.'
+  },
+  {
+    title: 'Community',
+    description: 'Creating harmonious living spaces that foster strong communities and connections.'
+  },
+  {
+    title: 'Excellence',
+    description: 'Delivering exceptional service through attention to detail and continuous improvement.'
+  },
+  {
+    title: 'Sustainability',
+    description: 'Promoting eco-friendly practices and sustainable property management solutions.'
+  }
+];
 
 export default function About() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text variant="headlineLarge" style={styles.title}>About Scale-R PMS</Text>
-        
+
         <View style={styles.section}>
           <Text variant="headlineSmall" style={styles.sectionTitle}>Our Story</Text>
           <Text style={styles.text}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Founded in 2024, Scale-R PMS emerged from a vision to transform property management in Ghana. We recognized the challenges faced by property owners and tenants in managing their rental relationships effectively. Our solution combines local expertise with modern technology to create a seamless property management experience.
           </Text>
         </View>
 
         <View style={styles.section}>
           <Text variant="headlineSmall" style={styles.sectionTitle}>Our Mission</Text>
           <Text style={styles.text}>
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            We are committed to revolutionizing property management in Ghana by providing an innovative, user-friendly platform that connects property owners and tenants. Our goal is to streamline rental processes, enhance communication, and create positive living experiences while promoting sustainable property management practices.
           </Text>
         </View>
 
         <View style={styles.section}>
           <Text variant="headlineSmall" style={styles.sectionTitle}>Our Values</Text>
           <View style={styles.valuesGrid}>
-            {[
-              { title: 'Integrity', description: 'We maintain the highest standards of integrity in all our dealings.' },
-              { title: 'Excellence', description: 'We strive for excellence in every aspect of our service.' },
-              { title: 'Innovation', description: 'We continuously innovate to provide better solutions.' },
-              { title: 'Customer Focus', description: 'We put our customers first in everything we do.' },
-            ].map((value, index) => (
+            {values.map((value, index) => (
               <Card key={index} style={styles.valueCard}>
                 <Card.Content>
                   <Text variant="titleMedium" style={styles.valueTitle}>{value.title}</Text>

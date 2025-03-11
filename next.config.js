@@ -8,7 +8,7 @@ const nextConfig = {
   },
   // Enable static optimization where possible
   experimental: {
-    serverActions: true,
+    typedRoutes: true,
   },
   // Add headers for security
   async headers() {
@@ -39,7 +39,22 @@ const nextConfig = {
         ]
       }
     ]
-  }
+  },
+  transpilePackages: ['react-native', 'react-native-web'],
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      'react-native$': 'react-native-web',
+    }
+    config.resolve.extensions = [
+      '.web.js',
+      '.web.jsx',
+      '.web.ts',
+      '.web.tsx',
+      ...config.resolve.extensions,
+    ]
+    return config
+  },
 }
 
 module.exports = nextConfig 

@@ -1,55 +1,74 @@
 import * as React from 'react'
-import { formatDate } from '@/lib/utils'
-import { Button } from '@/components/ui/button-component'
+import { formatDate } from '@/utils/format-date'
+import { Button } from '../ui/button'
 import Link from 'next/link'
 
-const requests = [
+interface MaintenanceRequest {
+  id: number
+  title: string
+  description: string
+  status: 'pending' | 'in_progress' | 'completed'
+  priority: 'low' | 'medium' | 'high'
+  createdAt: string
+  updatedAt: string
+}
+
+const mockRequests: MaintenanceRequest[] = [
   {
     id: 1,
-    title: 'Leaking Faucet',
-    status: 'in_progress',
-    priority: 'medium',
-    date: '2024-01-15',
-    description: 'Kitchen sink faucet is dripping continuously',
-    assignedTo: 'John Smith'
+    title: 'Water Leak in Kitchen',
+    description: 'Water is leaking from under the kitchen sink. The cabinet below is getting water damage.',
+    status: 'pending',
+    priority: 'high',
+    createdAt: '2024-03-08T10:00:00Z',
+    updatedAt: '2024-03-08T10:00:00Z'
   },
   {
     id: 2,
-    title: 'AC Not Cooling',
-    status: 'open',
-    priority: 'high',
-    date: '2024-01-18',
-    description: 'Air conditioner is running but not cooling effectively',
-    assignedTo: 'Pending Assignment'
+    title: 'AC Not Cooling Properly',
+    description: 'The air conditioner is running but not cooling effectively. Room temperature remains high even on maximum settings.',
+    status: 'in_progress',
+    priority: 'medium',
+    createdAt: '2024-03-07T15:30:00Z',
+    updatedAt: '2024-03-08T09:00:00Z'
   },
   {
     id: 3,
-    title: 'Light Fixture Replacement',
+    title: 'Electrical Socket Issue',
+    description: 'The electrical socket in the living room is loose and sparking when plugs are inserted. This seems dangerous.',
     status: 'completed',
-    priority: 'low',
-    date: '2024-01-10',
-    description: 'Living room ceiling light needs replacement',
-    assignedTo: 'Mike Johnson'
+    priority: 'high',
+    createdAt: '2024-03-05T08:00:00Z',
+    updatedAt: '2024-03-06T14:00:00Z'
+  },
+  {
+    id: 4,
+    title: 'Bathroom Tiles Cracking',
+    description: 'Several tiles in the bathroom floor are cracking and becoming loose. Concerned about water damage to the subfloor.',
+    status: 'pending',
+    priority: 'medium',
+    createdAt: '2024-03-04T11:20:00Z',
+    updatedAt: '2024-03-04T11:20:00Z'
   }
-]
+];
 
-const statusColors = {
-  open: 'text-yellow-500',
+const statusColors: Record<MaintenanceRequest['status'], string> = {
+  pending: 'text-yellow-500',
   in_progress: 'text-blue-500',
   completed: 'text-green-500'
 }
 
-const priorityColors = {
+const priorityColors: Record<MaintenanceRequest['priority'], string> = {
   low: 'bg-gray-100',
   medium: 'bg-yellow-100',
   high: 'bg-red-100'
 }
 
 export function MaintenanceRequests() {
-  const activeRequests = requests.filter(
+  const activeRequests = mockRequests.filter(
     (request) => request.status !== 'completed'
   )
-  const completedRequests = requests.filter(
+  const completedRequests = mockRequests.filter(
     (request) => request.status === 'completed'
   )
 
@@ -72,13 +91,12 @@ export function MaintenanceRequests() {
               <div>
                 <h4 className="font-medium">{request.title}</h4>
                 <p className="text-sm text-muted-foreground">
-                  Submitted {formatDate(request.date)}
+                  Submitted {formatDate(request.createdAt)}
                 </p>
               </div>
               <div
-                className={`px-2 py-1 rounded text-sm ${
-                  priorityColors[request.priority as keyof typeof priorityColors]
-                }`}
+                className={`px-2 py-1 rounded text-sm ${priorityColors[request.priority as keyof typeof priorityColors]
+                  }`}
               >
                 {request.priority.charAt(0).toUpperCase() +
                   request.priority.slice(1)}
@@ -87,7 +105,7 @@ export function MaintenanceRequests() {
             <p className="text-sm mb-2">{request.description}</p>
             <div className="flex justify-between items-center text-sm">
               <span className="text-muted-foreground">
-                Assigned to: {request.assignedTo}
+                Updated: {formatDate(request.updatedAt)}
               </span>
               <span
                 className={
@@ -114,7 +132,7 @@ export function MaintenanceRequests() {
                   <div>
                     <h4 className="font-medium">{request.title}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Completed {formatDate(request.date)}
+                      Completed {formatDate(request.createdAt)}
                     </p>
                   </div>
                 </div>

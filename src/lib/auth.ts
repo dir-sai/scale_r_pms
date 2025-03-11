@@ -1,116 +1,52 @@
+import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import { db } from './db'
-import { compare } from 'bcrypt'
+import { db } from '@/lib/db'
+import { JWT } from 'next-auth/jwt'
 
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string
-      name: string
-      email: string
-      role: 'ADMIN' | 'LANDLORD' | 'TENANT'
-    }
-  }
+import type { NextAuthConfig } from 'next-auth'
 
-  interface User {
-    role: 'ADMIN' | 'LANDLORD' | 'TENANT'
-  }
-}
-
-declare module 'next-auth/jwt' {
-  interface JWT {
-    id: string
-    role: 'ADMIN' | 'LANDLORD' | 'TENANT'
-  }
-}
-
-export const authOptions: NextAuthOptions = {
+export const config = {
   adapter: PrismaAdapter(db),
-  session: {
-    strategy: 'jwt'
-  },
   pages: {
-    signIn: '/login',
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+    error: '/auth/error',
+    verifyRequest: '/auth/verify-request',
+    newUser: '/auth/new-user'
   },
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
-        }
-
-        const user = await db.user.findUnique({
-          where: {
-            email: credentials.email
-          }
-        })
-
-        if (!user) {
-          return null
-        }
-
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password
-        )
-
-        if (!isPasswordValid) {
-          return null
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        }
-      }
-    })
-  ],
   callbacks: {
-    async session({ token, session }) {
-      if (token && session.user) {
-        session.user.id = token.id
-        session.user.name = token.name ?? ''
-        session.user.email = token.email ?? ''
-        session.user.role = token.role
-      }
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user
+      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard')
+      const isOnPortal = nextUrl.pathname.startsWith('/portal')
+      const isOnAdmin = nextUrl.pathname.startsWith('/admin')
 
+      if (isOnDashboard || isOnPortal || isOnAdmin) {
+        if (isLoggedIn) return true
+        return false
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/dashboard', nextUrl))
+      }
+      return true
+    },
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id
+        session.user.role = user.role
+      }
       return session
     },
-    async jwt({ token, user }) {
-      const dbUser = await db.user.findFirst({
-        where: {
-          email: token.email!,
-        },
-      })
-
-      if (!dbUser) {
-        if (user) {
-          token.id = user?.id
-          token.role = user.role
-        }
-        return token
+    async jwt({ token, user, account, profile }) {
+      if (user) {
+        token.id = user.id
+        token.role = user.role
       }
-
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        role: dbUser.role,
-      }
+      return token
     }
+  },
+  session: {
+    strategy: 'jwt'
   }
-} 
+} satisfies NextAuthConfig
+
+export const { auth, signIn, signOut, handlers } = NextAuth(config) 

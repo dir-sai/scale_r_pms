@@ -1,10 +1,11 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button } from '../ui/button'
 import {
   BanknotesIcon,
   DocumentTextIcon,
   WrenchScrewdriverIcon
 } from '@heroicons/react/24/outline'
+import { useTenant } from '../../hooks/useTenant'
 
 const quickActions = [
   {
@@ -28,13 +29,17 @@ const quickActions = [
 ]
 
 export function TenantHeader() {
+  const { tenant } = useTenant()
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Welcome Back, John</h1>
+          <h1 className="text-3xl font-bold">
+            Welcome to Your Portal{tenant?.name ? `, ${tenant.name}` : ''}
+          </h1>
           <p className="text-muted-foreground">
-            Here's what's happening with your rental
+            Manage your rental, payments, and maintenance requests all in one place
           </p>
         </div>
         <div className="flex items-center gap-4">
