@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import { Metadata } from 'next'
 import type { ComponentType } from 'react'
@@ -17,6 +19,13 @@ import { db } from '@/lib/db'
 import { formatCurrency } from '@/lib/utils'
 import { MaintenanceRequests } from '@/components/tenant/maintenance-requests'
 import { TenantHeader } from '@/components/tenant/tenant-header'
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { GuestCommunication } from "@/components/communication/guest-communication"
+import { UnifiedInbox } from "@/components/inbox/unified-inbox"
+import { ChannelManager } from "@/components/channel-manager/channel-manager"
+import { TeamManagement } from "@/components/team/team-management"
+import { TaskManagement } from "@/components/tasks/task-management"
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement>>
 
@@ -116,44 +125,58 @@ async function getOverviewData(userId: string) {
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
-      <TenantHeader />
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Maintenance Requests</h2>
-          <MaintenanceRequests />
-        </div>
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Recent Activity</h2>
-          <div className="rounded-lg border">
-            <div className="p-4">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Rent Payment Processed</p>
-                    <p className="text-xs text-gray-500">March 1, 2024</p>
-                  </div>
-                  <span className="text-green-600">$1,200</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Maintenance Request Updated</p>
-                    <p className="text-xs text-gray-500">February 28, 2024</p>
-                  </div>
-                  <span className="text-blue-600">In Progress</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">New Document Added</p>
-                    <p className="text-xs text-gray-500">February 25, 2024</p>
-                  </div>
-                  <span className="text-purple-600">Lease Agreement</span>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="flex-1 space-y-4 p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="flex items-center space-x-2">
+          <Button>Add Property</Button>
         </div>
       </div>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="communication">Communication</TabsTrigger>
+          <TabsTrigger value="inbox">Unified Inbox</TabsTrigger>
+          <TabsTrigger value="channels">Channel Manager</TabsTrigger>
+          <TabsTrigger value="team">Team</TabsTrigger>
+          <TabsTrigger value="tasks">Tasks</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="p-4">
+              <h3 className="font-semibold">Active Properties</h3>
+              <p className="text-2xl font-bold">12</p>
+            </Card>
+            <Card className="p-4">
+              <h3 className="font-semibold">Pending Tasks</h3>
+              <p className="text-2xl font-bold">8</p>
+            </Card>
+            <Card className="p-4">
+              <h3 className="font-semibold">New Messages</h3>
+              <p className="text-2xl font-bold">24</p>
+            </Card>
+            <Card className="p-4">
+              <h3 className="font-semibold">Team Members</h3>
+              <p className="text-2xl font-bold">6</p>
+            </Card>
+          </div>
+        </TabsContent>
+        <TabsContent value="communication" className="space-y-4">
+          <GuestCommunication />
+        </TabsContent>
+        <TabsContent value="inbox" className="space-y-4">
+          <UnifiedInbox />
+        </TabsContent>
+        <TabsContent value="channels" className="space-y-4">
+          <ChannelManager />
+        </TabsContent>
+        <TabsContent value="team" className="space-y-4">
+          <TeamManagement />
+        </TabsContent>
+        <TabsContent value="tasks" className="space-y-4">
+          <TaskManagement />
+        </TabsContent>
+      </Tabs>
     </div>
   )
 } 

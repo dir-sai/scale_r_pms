@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { Ratelimit } from '@upstash/ratelimit'
-import { Redis } from '@upstash/redis'
 import { headers } from 'next/headers'
 
-// Create a new ratelimiter that allows 10 requests per 10 seconds
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(10, '10 s'),
-  analytics: true
-})
+// Simple in-memory store for rate limiting
+const rateLimit = new Map<string, number>()
+
+// Rate limit configuration
+const RATE_LIMIT = 10 // requests
+const TIME_WINDOW = 10 * 1000 // 10 seconds in milliseconds
 
 // Security headers following OWASP recommendations
 const securityHeaders = {
@@ -30,20 +28,34 @@ export async function middleware(request: NextRequest) {
   // Apply rate limiting to API routes
   if (pathname.startsWith('/api')) {
     const ip = headers().get('x-forwarded-for') ?? '127.0.0.1'
-    const { success, pending, limit, reset, remaining } = await ratelimit.limit(
-      `ratelimit_${ip}`
-    )
+    const now = Date.now()
+    const windowStart = now - TIME_WINDOW
 
-    if (!success) {
+    // Clean up old entries
+    Array.from(rateLimit.entries()).forEach(([key, timestamp]) => {
+      if (timestamp < windowStart) {
+        rateLimit.delete(key)
+      }
+    })
+
+    // Count requests in the current window
+    const requestCount = Array.from(rateLimit.entries()).filter(
+      ([key, timestamp]) => key.startsWith(ip) && timestamp > windowStart
+    ).length
+
+    if (requestCount >= RATE_LIMIT) {
       return new NextResponse('Too Many Requests', {
         status: 429,
         headers: {
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString()
+          'X-RateLimit-Limit': RATE_LIMIT.toString(),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': (Math.ceil(now / TIME_WINDOW) * TIME_WINDOW).toString()
         }
       })
     }
+
+    // Add current request to the rate limit map
+    rateLimit.set(`${ip}_${now}`, now)
   }
 
   // Clone the response to add headers

@@ -5,22 +5,35 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "scale-r-pms",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.scale-r.pms",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "93305427002-uqgn235jofo5l2cdel7jgpn5180i3p5f.apps.googleusercontent.com"
+        }
+      }
     },
     "android": {
+      "package": "com.scale_r.pms",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "config": {
+        "googleSignIn": {
+          "clientId": "93305427002-uqgn235jofo5l2cdel7jgpn5180i3p5f.apps.googleusercontent.com"
+        }
+      }
     },
     "plugins": [
       "expo-router",
@@ -32,10 +45,15 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "@react-native-google-signin/google-signin",
+      "expo-secure-store",
+      "expo-auth-session",
+      "expo-web-browser"
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "tsconfigPaths": true
     },
     "extra": {
       "router": {

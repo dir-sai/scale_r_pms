@@ -1,12 +1,17 @@
-import NextAuth from 'next-auth'
+import { type NextAuthConfig } from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { db } from '@/lib/db'
-import { JWT } from 'next-auth/jwt'
+import { type JWT } from '@auth/core/jwt'
+import { type Session, type User } from '@auth/core/types'
+import NextAuth from 'next-auth'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import type { DefaultSession } from '@auth/core/types'
+import type { Account, Profile } from 'next-auth'
 
-import type { NextAuthConfig } from 'next-auth'
-
-export const config = {
+export const authOptions: NextAuthConfig = {
   adapter: PrismaAdapter(db),
+  providers: [], // Required by NextAuthConfig type
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
@@ -15,31 +20,42 @@ export const config = {
     newUser: '/auth/new-user'
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ request, auth }: { request: NextRequest, auth: Session | null }) {
       const isLoggedIn = !!auth?.user
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard')
-      const isOnPortal = nextUrl.pathname.startsWith('/portal')
-      const isOnAdmin = nextUrl.pathname.startsWith('/admin')
+      const isOnDashboard = request.nextUrl.pathname.startsWith('/dashboard')
+      const isOnPortal = request.nextUrl.pathname.startsWith('/portal')
+      const isOnAdmin = request.nextUrl.pathname.startsWith('/admin')
 
       if (isOnDashboard || isOnPortal || isOnAdmin) {
         if (isLoggedIn) return true
         return false
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl))
+        return NextResponse.redirect(new URL('/dashboard', request.nextUrl))
       }
       return true
     },
-    async session({ session, user }) {
+    async session({ session, token }: { session: Session & { user: { role?: string } }, token: JWT & { role?: string } }) {
       if (session.user) {
-        session.user.id = user.id
-        session.user.role = user.role
+        session.user.id = token.sub as string
+        session.user.role = token.role
       }
       return session
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile, trigger, isNewUser, session }: { 
+      token: JWT, 
+      user: User, 
+      account: Account | null,
+      profile?: Profile,
+      trigger?: "signIn" | "signUp" | "update",
+      isNewUser?: boolean,
+      session?: any
+    }) {
       if (user) {
         token.id = user.id
-        token.role = user.role
+        // Only set role if it exists on the user
+        if ('role' in user) {
+          token.role = (user as User & { role: string }).role
+        }
       }
       return token
     }
@@ -47,6 +63,6 @@ export const config = {
   session: {
     strategy: 'jwt'
   }
-} satisfies NextAuthConfig
+}
 
-export const { auth, signIn, signOut, handlers } = NextAuth(config) 
+export const { auth, signIn, signOut } = NextAuth(authOptions)
