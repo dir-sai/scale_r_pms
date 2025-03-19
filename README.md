@@ -148,6 +148,74 @@ npm run build
 npm run start
 ```
 
+## Environment Configuration
+
+The project uses different environment configurations for development, staging, and production:
+
+1. **Development**: `.env.development`
+   - Local development environment
+   - Uses local services and databases
+   - Debug features enabled
+
+2. **Staging**: `.env.staging`
+   - Testing environment
+   - Uses staging services
+   - Mimics production setup
+
+3. **Production**: `.env.production`
+   - Production environment
+   - Uses production services
+   - Optimized for performance
+
+### Required Environment Variables
+
+```bash
+# App Configuration
+NEXT_PUBLIC_APP_NAME        # Application name
+NEXT_PUBLIC_APP_URL        # Application URL
+NEXT_PUBLIC_API_URL        # API endpoint URL
+NEXT_PUBLIC_CDN_URL        # CDN URL for assets
+NEXT_PUBLIC_BASE_URL       # Base URL for the application
+
+# Database Configuration
+DATABASE_URL               # PostgreSQL connection string
+
+# Authentication
+NEXTAUTH_URL              # NextAuth URL
+NEXTAUTH_SECRET           # NextAuth secret key
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL  # Supabase project URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY # Supabase anonymous key
+
+# OAuth Providers
+NEXT_PUBLIC_GOOGLE_CLIENT_ID  # Google OAuth client ID
+GOOGLE_CLIENT_SECRET          # Google OAuth client secret
+NEXT_PUBLIC_FACEBOOK_APP_ID   # Facebook App ID
+FACEBOOK_APP_SECRET           # Facebook App secret
+```
+
+### Setting Up Environment Variables
+
+1. Copy the example environment file:
+   ```bash
+   cp .env.example .env.development
+   ```
+
+2. Fill in the required values in the new file
+
+3. For different environments:
+   ```bash
+   # Development
+   cp .env.example .env.development
+   
+   # Staging
+   cp .env.example .env.staging
+   
+   # Production
+   cp .env.example .env.production
+   ```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -179,3 +247,4 @@ npm run start
 ## Support
 
 For support, please create an issue in the repository or contact support@scale-r-pms.com
+
