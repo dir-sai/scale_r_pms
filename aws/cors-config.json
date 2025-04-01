@@ -1,0 +1,25 @@
+{
+    "CORSRules": [
+        {
+            "AllowedHeaders": [
+                "*"
+            ],
+            "AllowedMethods": [
+                "GET",
+                "PUT",
+                "POST",
+                "DELETE"
+            ],
+            "AllowedOrigins": [
+                "http://localhost:3000",
+                "https://scale-r-pms.com",
+                "exp://localhost:19000",
+                "https://auth.expo.io"
+            ],
+            "ExposeHeaders": [
+                "ETag"
+            ],
+            "MaxAgeSeconds": 3600
+        }
+    ]
+}

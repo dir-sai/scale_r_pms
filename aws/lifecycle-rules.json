@@ -1,0 +1,24 @@
+{
+    "Rules": [
+        {
+            "ID": "TransitionToInfrequentAccess",
+            "Status": "Enabled",
+            "Filter": {
+                "Prefix": "documents/"
+            },
+            "Transitions": [
+                {
+                    "Days": 30,
+                    "StorageClass": "STANDARD_IA"
+                }
+            ]
+        },
+        {
+            "ID": "DeleteOldVersions",
+            "Status": "Enabled",
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 90
+            }
+        }
+    ]
+}

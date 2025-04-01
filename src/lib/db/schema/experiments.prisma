@@ -1,0 +1,65 @@
+model Experiment {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  source      String      // 'google_optimize' or 'internal'
+  sourceId    String?     // Google Optimize experiment ID if applicable
+  status      String      @default("active") // active, paused, completed
+  startDate   DateTime    @default(now())
+  endDate     DateTime?
+  variants    Variant[]
+  exposures   Exposure[]
+  conversions Conversion[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([source, sourceId])
+}
+
+model Variant {
+  id           String      @id @default(cuid())
+  experimentId String
+  name         String
+  description  String?
+  weight       Float       @default(1.0)
+  experiment   Experiment  @relation(fields: [experimentId], references: [id])
+  exposures    Exposure[]
+  conversions  Conversion[]
+
+  @@unique([experimentId, name])
+}
+
+model Exposure {
+  id           String     @id @default(cuid())
+  experimentId String
+  variantId    String
+  userId       String?
+  sessionId    String
+  timestamp    DateTime   @default(now())
+  metadata     Json?
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  variant      Variant    @relation(fields: [variantId], references: [id])
+
+  @@index([experimentId, variantId])
+  @@index([sessionId])
+  @@index([userId])
+}
+
+model Conversion {
+  id           String     @id @default(cuid())
+  experimentId String
+  variantId    String
+  userId       String?
+  sessionId    String
+  type         String
+  value        Float?
+  metadata     Json?
+  timestamp    DateTime   @default(now())
+  experiment   Experiment @relation(fields: [experimentId], references: [id])
+  variant      Variant    @relation(fields: [variantId], references: [id])
+
+  @@index([experimentId, variantId])
+  @@index([sessionId])
+  @@index([userId])
+  @@index([type])
+}

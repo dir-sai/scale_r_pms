@@ -1,0 +1,19 @@
+{
+    "Name": "Scale-R-PMS-CORS-Headers",
+    "CorsConfig": {
+        "AccessControlAllowCredentials": false,
+        "AccessControlAllowHeaders": ["*"],
+        "AccessControlAllowMethods": ["GET", "HEAD", "OPTIONS"],
+        "AccessControlAllowOrigins": {
+            "Items": [
+                "http://localhost:3000",
+                "https://scale-r-pms.com",
+                "exp://localhost:19000",
+                "https://auth.expo.io"
+            ]
+        },
+        "AccessControlExposeHeaders": ["ETag"],
+        "AccessControlMaxAge": 3600,
+        "OriginOverride": true
+    }
+}

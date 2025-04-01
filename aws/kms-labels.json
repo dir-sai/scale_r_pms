@@ -1,0 +1,18 @@
+{
+    "Name": "scale-r-pms-s3-key",
+    "Description": "KMS key for Scale-R PMS S3 bucket encryption",
+    "Tags": [
+        {
+            "Key": "Project",
+            "Value": "scale-r-pms"
+        },
+        {
+            "Key": "Environment",
+            "Value": "production"
+        },
+        {
+            "Key": "Service",
+            "Value": "storage"
+        }
+    ]
+}

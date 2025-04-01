@@ -1,0 +1,6 @@
+Connection name: Scale-R PMS Local
+Host: localhost
+Port: 5432
+Database: scale_r_pms
+Username: postgres
+Password: postgres

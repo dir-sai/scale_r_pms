@@ -1,0 +1,26 @@
+{
+    "Name": "Scale-R-PMS-Security-Headers",
+    "SecurityHeadersConfig": {
+        "ContentSecurityPolicy": {
+            "Override": true,
+            "ContentSecurityPolicy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.netlify.app https://api.scale-r-pms.com https://www.google-analytics.com;"
+        },
+        "StrictTransportSecurity": {
+            "Override": true,
+            "AccessControlMaxAge": 31536000,
+            "IncludeSubdomains": true
+        },
+        "XSSProtection": {
+            "Override": true,
+            "Protection": true,
+            "ModeBlock": true
+        },
+        "ContentTypeOptions": {
+            "Override": true
+        },
+        "ReferrerPolicy": {
+            "Override": true,
+            "ReferrerPolicy": "strict-origin-when-cross-origin"
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "alarms": [
+        {
+            "alarmName": "Scale-R-PMS-CloudFront-ErrorRate",
+            "alarmDescription": "CloudFront error rate exceeds threshold",
+            "metricName": "4xxErrorCount",
+            "namespace": "Scale-R-PMS/CloudFront",
+            "period": 300,
+            "evaluationPeriods": 2,
+            "threshold": 100,
+            "comparisonOperator": "GreaterThanThreshold",
+            "statistic": "Sum"
+        },
+        {
+            "alarmName": "Scale-R-PMS-CloudFront-5xxErrors",
+            "alarmDescription": "CloudFront 5xx errors detected",
+            "metricName": "5xxErrorCount",
+            "namespace": "Scale-R-PMS/CloudFront",
+            "period": 300,
+            "evaluationPeriods": 1,
+            "threshold": 10,
+            "comparisonOperator": "GreaterThanThreshold",
+            "statistic": "Sum"
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "logGroupName": "/aws/cloudfront/scale-r-pms",
+    "retentionInDays": 30,
+    "metricFilters": [
+        {
+            "filterName": "4xxErrors",
+            "filterPattern": "[timestamp, distributor, client, path, status=4*, size, ...]",
+            "metricTransformations": [{
+                "metricName": "4xxErrorCount",
+                "metricNamespace": "Scale-R-PMS/CloudFront",
+                "metricValue": "1"
+            }]
+        },
+        {
+            "filterName": "5xxErrors",
+            "filterPattern": "[timestamp, distributor, client, path, status=5*, size, ...]",
+            "metricTransformations": [{
+                "metricName": "5xxErrorCount",
+                "metricNamespace": "Scale-R-PMS/CloudFront",
+                "metricValue": "1"
+            }]
+        }
+    ]
+}

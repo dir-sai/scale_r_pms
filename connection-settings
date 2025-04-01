@@ -1,0 +1,14 @@
+Connection name: Scale-R PMS Local
+Host: localhost
+Port: 5432
+Database: scale_r_pms
+Username: postgres
+Password: postgres
+SSL: Disabled
+
+Advanced Settings:
+statement_timeout: 30000
+query_timeout: 30000
+connectionTimeoutMillis: 30000
+idleTimeoutMillis: 10000
+max: 10

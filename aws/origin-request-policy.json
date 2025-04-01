@@ -1,0 +1,31 @@
+{
+    "Name": "Scale-R-PMS-Origin-Request",
+    "HeadersConfig": {
+        "HeaderBehavior": "whitelist",
+        "Headers": {
+            "Items": [
+                "Origin",
+                "Access-Control-Request-Headers",
+                "Access-Control-Request-Method",
+                "Authorization",
+                "Host",
+                "User-Agent"
+            ]
+        }
+    },
+    "CookiesConfig": {
+        "CookieBehavior": "none"
+    },
+    "QueryStringsConfig": {
+        "QueryStringBehavior": "whitelist",
+        "QueryStrings": {
+            "Items": [
+                "w",
+                "h",
+                "q",
+                "fm",
+                "blur"
+            ]
+        }
+    }
+}

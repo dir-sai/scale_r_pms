@@ -1,0 +1,16 @@
+{
+    "Tags": [
+        {
+            "Key": "Project",
+            "Value": "scale-r-pms"
+        },
+        {
+            "Key": "Environment",
+            "Value": "production"
+        },
+        {
+            "Key": "Service",
+            "Value": "logging"
+        }
+    ]
+}
